@@ -3,14 +3,14 @@ import { MeasuresRepository } from "./../../repositories/measures-repository";
 
 interface listUseCaseRequest {
   customer_code: string;
-  measure_type: string | undefined;
+  measure_type?: string;
 }
 
 type listUseCaseResponse = {
   measures: Measures[];
 };
 
-export class listUseCase {
+export class ListUseCase {
   constructor(private measuresRepository: MeasuresRepository) {}
 
   async execute({

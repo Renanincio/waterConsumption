@@ -60,4 +60,16 @@ export class InMemoryMeasuresRepository implements MeasuresRepository {
 
     return measure;
   }
+
+  async findById(measure_uuid: string) {
+    const measure = this.items.find(
+      (item) => item.measure_uuid === measure_uuid,
+    );
+
+    if (!measure) {
+      return null;
+    }
+
+    return measure;
+  }
 }

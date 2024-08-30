@@ -48,5 +48,9 @@ export async function Upload(request: FastifyRequest, reply: FastifyReply) {
     throw err;
   }
 
-  return reply.status(201).send();
+  return reply.status(200).send({
+    image_url: image,
+    measure_value,
+    measure_uuid,
+  });
 }

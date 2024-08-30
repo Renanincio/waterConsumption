@@ -2,7 +2,14 @@ import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function ImageReader(img_url: string) {
-  const fileManager = new GoogleAIFileManager(process.env.API_KEY);
+  let apiKey: string;
+  if (process.env.API_KEY) {
+    apiKey = process.env.API_KEY;
+  } else {
+    throw new Error("API_KEY environment variable is not set");
+  }
+
+  const fileManager = new GoogleAIFileManager(apiKey);
 
   const imageUrl = atob(img_url);
 
@@ -15,7 +22,7 @@ export async function ImageReader(img_url: string) {
     `Uploaded file ${uploadResponse.file.displayName} as: ${uploadResponse.file.uri}`,
   );
 
-  const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+  const genAI = new GoogleGenerativeAI(apiKey);
 
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro",

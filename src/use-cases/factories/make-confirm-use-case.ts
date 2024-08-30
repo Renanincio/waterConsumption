@@ -1,9 +1,9 @@
 import { PrismaMeasuresRepository } from "../../repositories/prisma/prisma-measures-repository";
-import { ListUseCase } from "../list/list";
+import { ConfirmUseCase } from "../confirm/confirm";
 
-export function makeListUseCase() {
+export function makeConfirmUseCase() {
   const measuresRepository = new PrismaMeasuresRepository();
-  const useCase = new ListUseCase(measuresRepository);
+  const useCase = new ConfirmUseCase(measuresRepository);
 
   return useCase;
 }

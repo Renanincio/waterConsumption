@@ -5,11 +5,11 @@ import dayjs from "dayjs";
 
 export class PrismaMeasuresRepository implements MeasuresRepository {
   async create(data: Measures) {
-    const user = await prisma.measures.create({
+    const measures = await prisma.measures.create({
       data,
     });
 
-    return user;
+    return measures;
   }
 
   async findManyByCodeAndType(
@@ -45,6 +45,16 @@ export class PrismaMeasuresRepository implements MeasuresRepository {
           gte: startOfTheMonth.toDate(),
           lte: measureDate,
         },
+      },
+    });
+
+    return measure;
+  }
+
+  async findById(measure_uuid: string) {
+    const measure = await prisma.measures.findUnique({
+      where: {
+        measure_uuid,
       },
     });
 
