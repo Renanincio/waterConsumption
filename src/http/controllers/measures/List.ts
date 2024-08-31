@@ -1,4 +1,3 @@
-// import { makeFetchUserCheckInsHistoryUseCase } from "@/use-cases/factories/make-fetch-user-check-ins-history-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { makeListUseCase } from "../../../use-cases/factories/make-fetch-list-use-case";
@@ -14,9 +13,10 @@ export async function List(request: FastifyRequest, reply: FastifyReply) {
   const fetchListUseCase = makeListUseCase();
 
   if (measure_type) {
+    const measureType = measure_type.toLowerCase();
     const { measures } = await fetchListUseCase.execute({
       customer_code,
-      measure_type,
+      measure_type: measureType,
     });
 
     return reply.status(200).send({

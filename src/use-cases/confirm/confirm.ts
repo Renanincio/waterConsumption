@@ -24,7 +24,12 @@ export class ConfirmUseCase {
       throw new MeasureNotFound();
     }
 
+    if (measure.has_confirmed) {
+      throw new Error("Leitura já confirmada.");
+    }
+
     measure.measure_value = confirmed_value;
+    measure.has_confirmed = true;
 
     return {
       measure,

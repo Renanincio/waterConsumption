@@ -10,5 +10,6 @@ export interface MeasuresRepository {
   findMeasureInTheSameMonth(
     measureDate: Date,
     measureType: string,
+    customer_code: string,
   ): Promise<Measures | null>;
 }

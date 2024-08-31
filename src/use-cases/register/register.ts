@@ -32,6 +32,7 @@ export class RegisterUseCase {
       await this.measuresRepository.findMeasureInTheSameMonth(
         measure_datetime,
         measure_type,
+        customer_code,
       );
 
     if (measureInTheSameMonth) {

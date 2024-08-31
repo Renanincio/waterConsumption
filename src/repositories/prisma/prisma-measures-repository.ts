@@ -35,11 +35,16 @@ export class PrismaMeasuresRepository implements MeasuresRepository {
     return measures;
   }
 
-  async findMeasureInTheSameMonth(measureDate: Date, measureType: string) {
+  async findMeasureInTheSameMonth(
+    measureDate: Date,
+    measureType: string,
+    customer_code: string,
+  ) {
     const startOfTheMonth = dayjs(measureDate).startOf("month");
 
     const measure = await prisma.measures.findFirst({
       where: {
+        customerCustomer_code: customer_code,
         measure_type: measureType,
         measure_datetime: {
           gte: startOfTheMonth.toDate(),

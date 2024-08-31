@@ -1,46 +1,56 @@
-import { compare } from "bcryptjs";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach } from "node:test";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { InMemoryMeasuresRepository } from "../../repositories/in-memory/in-memory-measures-repository";
+import { MaxNumberMeasuresError } from "../errors/max-number-measures-error";
 import { RegisterUseCase } from "./register";
-import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
-import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 
-let usersRepository: InMemoryUsersRepository;
+let measuresRepository: InMemoryMeasuresRepository;
 let sut: RegisterUseCase;
 
 describe("Register Use Case", () => {
-  beforeEach(() => {
-    usersRepository = new InMemoryUsersRepository();
-    sut = new RegisterUseCase(usersRepository);
-  });
-  it("should hash user password upon registration", async () => {
-    const { user } = await sut.execute({
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "123456",
+  beforeEach(async () => {
+    measuresRepository = new InMemoryMeasuresRepository();
+    sut = new RegisterUseCase(measuresRepository);
+
+    await measuresRepository.create({
+      customerCustomer_code: "Customer-1",
+      has_confirmed: false,
+      image_url: "",
+      measure_datetime: new Date(),
+      measure_type: "Water",
+      measure_uuid: "measure-1",
+      measure_value: 0,
     });
 
-    const isPasswordCorrectlyHashed = await compare(
-      "123456",
-      user.password_hash,
-    );
-
-    expect(isPasswordCorrectlyHashed).toBe(true);
+    vi.useFakeTimers();
   });
-  it("should not be able to register with same email twice", async () => {
-    const email = "johndoe@example.com";
 
-    const { user } = await sut.execute({
-      name: "John Doe",
-      email,
-      password: "123456",
-    });
-
-    await expect(() =>
-      sut.execute({
-        name: "John Doe",
-        email,
-        password: "123456",
-      }),
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
+  afterEach(() => {
+    vi.useRealTimers();
   });
+});
+it("should not be able to read measure twice in the same month", async () => {
+  vi.setSystemTime(new Date(2022, 0, 20, 8, 0, 0));
+
+  await sut.execute({
+    customer_code: "Customer-1",
+    has_confirmed: false,
+    image_url: "",
+    measure_datetime: new Date(),
+    measure_type: "Water",
+    measure_uuid: "measure-1",
+    measure_value: 0,
+  });
+
+  await expect(() =>
+    sut.execute({
+      customer_code: "Customer-1",
+      has_confirmed: false,
+      image_url: "",
+      measure_datetime: new Date(),
+      measure_type: "Water",
+      measure_uuid: "measure-2",
+      measure_value: 0,
+    }),
+  ).rejects.toBeInstanceOf(MaxNumberMeasuresError);
 });

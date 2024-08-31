@@ -1,5 +1,6 @@
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import "dotenv/config";
 
 export async function ImageReader(img_url: string) {
   let apiKey: string;

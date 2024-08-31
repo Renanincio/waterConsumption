@@ -29,11 +29,13 @@ export async function Upload(request: FastifyRequest, reply: FastifyReply) {
   try {
     const registerUseCase = makeRegisterUseCase();
 
+    const measureType = measure_type.toLowerCase();
+
     await registerUseCase.execute({
       image_url: image,
       customer_code,
       measure_datetime,
-      measure_type,
+      measure_type: measureType,
       has_confirmed,
       measure_uuid,
       measure_value,

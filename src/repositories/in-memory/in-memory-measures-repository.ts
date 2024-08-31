@@ -7,7 +7,11 @@ import dayjs from "dayjs";
 export class InMemoryMeasuresRepository implements MeasuresRepository {
   public items: Measures[] = [];
 
-  async findMeasureInTheSameMonth(measureDate: Date, measureType: string) {
+  async findMeasureInTheSameMonth(
+    measureDate: Date,
+    measureType: string,
+    customer_code: string,
+  ) {
     const startOfTheMonth = dayjs(measureDate).startOf("month");
 
     const measureOnSameMonth = this.items.find((measure) => {
@@ -16,7 +20,10 @@ export class InMemoryMeasuresRepository implements MeasuresRepository {
         measureMonth.isAfter(startOfTheMonth) &&
         measureMonth.isBefore(measureDate);
 
-      return measure.measure_type === measureType && isOnSameMonth;
+      return (
+        measure.measure_type === measureType,
+        measure.customerCustomer_code === customer_code && isOnSameMonth
+      );
     });
 
     if (!measureOnSameMonth) {
